@@ -48,17 +48,17 @@ namespace Persistence.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Paises",
+                name: "pais",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    NombrePais = table.Column<string>(type: "longtext", nullable: true)
+                    NombrePais = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Paises", x => x.Id);
+                    table.PrimaryKey("PK_pais", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -144,9 +144,9 @@ namespace Persistence.Data.Migrations
                 {
                     table.PrimaryKey("PK_departamento", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_departamento_Paises_IdPaisFK",
+                        name: "FK_departamento_pais_IdPaisFK",
                         column: x => x.IdPaisFK,
-                        principalTable: "Paises",
+                        principalTable: "pais",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -158,11 +158,14 @@ namespace Persistence.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    NombreUsuario = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     password = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    IdRolFK = table.Column<int>(type: "int", nullable: false)
+                    IdRolFK = table.Column<int>(type: "int", nullable: false),
+                    IdPersonaFK = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -224,6 +227,42 @@ namespace Persistence.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Personas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    Nombres = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Apellidos = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CorreoElectronico = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Documento = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Telefono = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FechaNacimiento = table.Column<DateOnly>(type: "date", nullable: false),
+                    IdTipoDocumentoFK = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Personas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Personas_tipo_documento_IdTipoDocumentoFK",
+                        column: x => x.IdTipoDocumentoFK,
+                        principalTable: "tipo_documento",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Personas_usuario_Id",
+                        column: x => x.Id,
+                        principalTable: "usuario",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "refresh_token",
                 columns: table => new
                 {
@@ -249,73 +288,6 @@ namespace Persistence.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "direccion",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    DireccionEscrita = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Barrio = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Estrato = table.Column<int>(type: "int", nullable: false),
-                    IdCiudadFK = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_direccion", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_direccion_ciudad_IdCiudadFK",
-                        column: x => x.IdCiudadFK,
-                        principalTable: "ciudad",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "persona",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Nombres = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Apellidos = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CorreoElectronico = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Documento = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Telefono = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FechaNacimiento = table.Column<DateOnly>(type: "date", nullable: false),
-                    IdTipoDocumentoFK = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_persona", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_persona_direccion_Id",
-                        column: x => x.Id,
-                        principalTable: "direccion",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_persona_tipo_documento_IdTipoDocumentoFK",
-                        column: x => x.IdTipoDocumentoFK,
-                        principalTable: "tipo_documento",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_persona_usuario_Id",
-                        column: x => x.Id,
-                        principalTable: "usuario",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "archivo",
                 columns: table => new
                 {
@@ -329,9 +301,39 @@ namespace Persistence.Data.Migrations
                 {
                     table.PrimaryKey("PK_archivo", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_archivo_persona_IdPersonaFK",
+                        name: "FK_archivo_Personas_IdPersonaFK",
                         column: x => x.IdPersonaFK,
-                        principalTable: "persona",
+                        principalTable: "Personas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "direccion",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false),
+                    DireccionEscrita = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Barrio = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Estrato = table.Column<int>(type: "int", nullable: false),
+                    IdCiudadFK = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_direccion", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_direccion_Personas_Id",
+                        column: x => x.Id,
+                        principalTable: "Personas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_direccion_ciudad_IdCiudadFK",
+                        column: x => x.IdCiudadFK,
+                        principalTable: "ciudad",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -348,15 +350,15 @@ namespace Persistence.Data.Migrations
                 {
                     table.PrimaryKey("PK_estudiante", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_estudiante_grupo_IdGrupoFK",
-                        column: x => x.IdGrupoFK,
-                        principalTable: "grupo",
+                        name: "FK_estudiante_Personas_Id",
+                        column: x => x.Id,
+                        principalTable: "Personas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_estudiante_persona_Id",
-                        column: x => x.Id,
-                        principalTable: "persona",
+                        name: "FK_estudiante_grupo_IdGrupoFK",
+                        column: x => x.IdGrupoFK,
+                        principalTable: "grupo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -375,9 +377,9 @@ namespace Persistence.Data.Migrations
                 {
                     table.PrimaryKey("PK_profesor", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_profesor_persona_Id",
+                        name: "FK_profesor_Personas_Id",
                         column: x => x.Id,
-                        principalTable: "persona",
+                        principalTable: "Personas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -436,15 +438,15 @@ namespace Persistence.Data.Migrations
                 {
                     table.PrimaryKey("PK_padre", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_padre_estudiante_IdEstudianteFK",
-                        column: x => x.IdEstudianteFK,
-                        principalTable: "estudiante",
+                        name: "FK_padre_Personas_Id",
+                        column: x => x.Id,
+                        principalTable: "Personas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_padre_persona_Id",
-                        column: x => x.Id,
-                        principalTable: "persona",
+                        name: "FK_padre_estudiante_IdEstudianteFK",
+                        column: x => x.IdEstudianteFK,
+                        principalTable: "estudiante",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -582,6 +584,15 @@ namespace Persistence.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "pais",
+                columns: new[] { "Id", "NombrePais" },
+                values: new object[,]
+                {
+                    { 1, "Colombia" },
+                    { 2, "Venezuela" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "rol",
                 columns: new[] { "Id", "rolName" },
                 values: new object[,]
@@ -615,6 +626,49 @@ namespace Persistence.Data.Migrations
                     { 3, "Talleres", 25.0 },
                     { 4, "Evaluaciones", 35.0 },
                     { 5, "Tareas", 20.0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "departamento",
+                columns: new[] { "Id", "IdPaisFK", "NombreDepartamento" },
+                values: new object[,]
+                {
+                    { 1, 1, "Santander" },
+                    { 2, 1, "Cundinamarca" },
+                    { 3, 2, "Carabobo" },
+                    { 4, 2, "Bolivar" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "usuario",
+                columns: new[] { "Id", "password", "email", "IdPersonaFK", "IdRolFK", "NombreUsuario" },
+                values: new object[,]
+                {
+                    { 1, "AQAAAAIAAYagAAAAEJLB6/aRrT6xkqJYUfQxwUt2wY/37H0PPJ4XDNylyx9yk2mGK4ixSJDOn0Mc+KeB6g==", "administrador@gmail.com", 1, 1, "JulianA" },
+                    { 2, "AQAAAAIAAYagAAAAEFSN6Is9/ceIML/0ANwVUWfAvLvM3DvnVik1IjmCZ03xL+ZWXCBPmZ0gHM8ERFflhQ==", "profesor@gmail.com", 2, 2, "JulianP" },
+                    { 3, "AQAAAAIAAYagAAAAEEL2KHqP09HxnEgi6X7HSyIiBk6TfkY2249D5R/9s/IbMItQdenOd5pS/c6FUVZzzQ==", "estudiante@gmail.com", 3, 3, "JulianE" },
+                    { 4, "AQAAAAIAAYagAAAAEOB7D6zemNVt7Es0SiywOv6qCr+Xfl89OmBKONBTSdug1ZpV4nKm+TZPbbJvByxM2w==", "padre@gmail.com", 4, 4, "JulianPa" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Personas",
+                columns: new[] { "Id", "Apellidos", "CorreoElectronico", "Documento", "FechaNacimiento", "IdTipoDocumentoFK", "Nombres", "Telefono" },
+                values: new object[,]
+                {
+                    { 1, "Apellido Ejemplo", "persona@example.com", "123456789", new DateOnly(2022, 10, 10), 1, "Nombre Ejemplo", "1234567890" },
+                    { 2, "Apellido Ejemplo", "persona@example.com", "123456789", new DateOnly(2022, 10, 10), 1, "Nombre Ejemplo", "1234567890" },
+                    { 3, "Apellido Ejemplo", "persona@example.com", "123456789", new DateOnly(2022, 10, 10), 1, "Nombre Ejemplo", "1234567890" },
+                    { 4, "Apellido Ejemplo", "persona@example.com", "123456789", new DateOnly(2022, 10, 10), 1, "Nombre Ejemplo", "1234567890" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ciudad",
+                columns: new[] { "Id", "IdDepartamentoFK", "NombreCiudad" },
+                values: new object[,]
+                {
+                    { 1, 1, "Bucaramanga" },
+                    { 2, 1, "Giron" },
+                    { 3, 1, "Floridablanca" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -703,8 +757,8 @@ namespace Persistence.Data.Migrations
                 column: "IdEstudianteFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_persona_IdTipoDocumentoFK",
-                table: "persona",
+                name: "IX_Personas_IdTipoDocumentoFK",
+                table: "Personas",
                 column: "IdTipoDocumentoFK");
 
             migrationBuilder.CreateIndex(
@@ -723,6 +777,9 @@ namespace Persistence.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "archivo");
+
+            migrationBuilder.DropTable(
+                name: "direccion");
 
             migrationBuilder.DropTable(
                 name: "grupo_materia");
@@ -746,10 +803,16 @@ namespace Persistence.Data.Migrations
                 name: "refresh_token");
 
             migrationBuilder.DropTable(
+                name: "ciudad");
+
+            migrationBuilder.DropTable(
                 name: "corte");
 
             migrationBuilder.DropTable(
                 name: "tipo_nota");
+
+            migrationBuilder.DropTable(
+                name: "departamento");
 
             migrationBuilder.DropTable(
                 name: "boletin");
@@ -761,19 +824,16 @@ namespace Persistence.Data.Migrations
                 name: "profesor");
 
             migrationBuilder.DropTable(
+                name: "pais");
+
+            migrationBuilder.DropTable(
                 name: "estudiante");
 
             migrationBuilder.DropTable(
+                name: "Personas");
+
+            migrationBuilder.DropTable(
                 name: "grupo");
-
-            migrationBuilder.DropTable(
-                name: "persona");
-
-            migrationBuilder.DropTable(
-                name: "grado");
-
-            migrationBuilder.DropTable(
-                name: "direccion");
 
             migrationBuilder.DropTable(
                 name: "tipo_documento");
@@ -782,16 +842,10 @@ namespace Persistence.Data.Migrations
                 name: "usuario");
 
             migrationBuilder.DropTable(
-                name: "ciudad");
+                name: "grado");
 
             migrationBuilder.DropTable(
                 name: "rol");
-
-            migrationBuilder.DropTable(
-                name: "departamento");
-
-            migrationBuilder.DropTable(
-                name: "Paises");
         }
     }
 }

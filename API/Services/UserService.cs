@@ -146,6 +146,61 @@ namespace API.Services
 
 
 
+         public async Task<DatosUsuarioDto> GetTokenGoogleAsync(LogiarGoogleDto model)
+        {
+            DatosUsuarioDto dataUserDto = new DatosUsuarioDto();
+            var user = await _unitOfWork.Usuarios
+                        .GetByUserGmailAsync(model.CorreoUsuario);
+
+            if (user == null)
+            {
+                dataUserDto.RefreshToken = "";
+                dataUserDto.RefreshTokenExpiry = DateTime.Now;
+                dataUserDto.UsuarioToken = "";
+                dataUserDto.CorreoUsuario = "";
+                dataUserDto.UsuarioRol = null;
+                dataUserDto.EstadoAutenticado = false;
+                dataUserDto.Mensaje = $"Correo Electronico No Existente en la base de datos";
+                return dataUserDto;
+            }
+
+            else{
+
+            
+                dataUserDto.EstadoAutenticado = true;
+                JwtSecurityToken jwtSecurityToken = CreateJwtToken(user);
+                dataUserDto.UsuarioToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                dataUserDto.CorreoUsuario = user.CorreoUsuario;
+                dataUserDto.UsuarioRol = user.Rol.NombreRol;
+                                                
+                                                
+
+                if (user.RefreshTokens.Any(a => a.IsActive))
+                {
+                    var activeRefreshToken = user.RefreshTokens.Where(a => a.IsActive == true).FirstOrDefault();
+                    dataUserDto.Mensaje = "Usuario Existente";
+                    dataUserDto.RefreshToken = activeRefreshToken.Token;
+                    dataUserDto.RefreshTokenExpiry = activeRefreshToken.Expires;
+                }
+                else
+                {
+                    var refreshToken = CreateRefreshToken();
+                    dataUserDto.RefreshToken = refreshToken.Token;
+                    dataUserDto.RefreshTokenExpiry = refreshToken.Expires;
+                    user.RefreshTokens.Add(refreshToken);
+                    _unitOfWork.Usuarios.Update(user);
+                    await _unitOfWork.SaveAsync();
+                }
+
+                return dataUserDto;
+        
+            }
+
+        }
+
+
+
+
 
 
 

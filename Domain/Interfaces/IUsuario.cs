@@ -10,5 +10,6 @@ namespace Domain.Interfaces
     {
         Task<Usuario> GetByUserGmailAsync(string username);
         Task<Usuario> GetByRefreshTokenAsync(string username); 
+        
     }
 }

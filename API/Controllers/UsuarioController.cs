@@ -33,10 +33,17 @@ namespace API.Controllers
         public async Task<IActionResult> GetTokenAsync(LogiarDto model)
         {
             var result = await _userService.GetTokenAsync(model);
-            SetRefreshTokenInCookie(result.RefreshToken);
             return Ok(result);
         }
 
+
+
+        [HttpPost("token-google")]
+        public async Task<IActionResult> GetTokenGoogleAsync(LogiarGoogleDto model)
+        {
+            var result = await _userService.GetTokenGoogleAsync(model);
+            return Ok(result);
+        }
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken()

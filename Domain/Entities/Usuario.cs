@@ -7,10 +7,12 @@ namespace Domain.Entities
 {
     public class Usuario : BaseEntity
     {
+        public string NombreUsuario {get; set;}
         public string CorreoUsuario { get; set; }
         public string ClaveUsuario { get; set;}
         public int IdRolFK {get; set;}
         public Rol Rol {get; set;}
+        public int IdPersonaFK {get; set;}
         public Persona Persona {get; set;}
         public ICollection<RefreshToken> RefreshTokens { get; set;}
     }

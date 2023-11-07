@@ -77,6 +77,26 @@ namespace Persistence.Data.Migrations
                     b.HasIndex("IdDepartamentoFK");
 
                     b.ToTable("ciudad", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IdDepartamentoFK = 1,
+                            NombreCiudad = "Bucaramanga"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IdDepartamentoFK = 1,
+                            NombreCiudad = "Giron"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IdDepartamentoFK = 1,
+                            NombreCiudad = "Floridablanca"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Corte", b =>
@@ -138,12 +158,37 @@ namespace Persistence.Data.Migrations
                     b.HasIndex("IdPaisFK");
 
                     b.ToTable("departamento", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IdPaisFK = 1,
+                            NombreDepartamento = "Santander"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IdPaisFK = 1,
+                            NombreDepartamento = "Cundinamarca"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IdPaisFK = 2,
+                            NombreDepartamento = "Carabobo"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IdPaisFK = 2,
+                            NombreDepartamento = "Bolivar"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Direccion", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<string>("Barrio")
@@ -373,11 +418,24 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NombrePais")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Paises");
+                    b.ToTable("pais", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            NombrePais = "Colombia"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            NombrePais = "Venezuela"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Persona", b =>
@@ -386,13 +444,19 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Apellidos")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("CorreoElectronico")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Documento")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
                     b.Property<DateOnly>("FechaNacimiento")
                         .HasColumnType("date");
@@ -401,17 +465,65 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Nombres")
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Telefono")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdTipoDocumentoFK");
 
-                    b.ToTable("persona", (string)null);
+                    b.ToTable("Personas");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Apellidos = "Apellido Ejemplo",
+                            CorreoElectronico = "persona@example.com",
+                            Documento = "123456789",
+                            FechaNacimiento = new DateOnly(2022, 10, 10),
+                            IdTipoDocumentoFK = 1,
+                            Nombres = "Nombre Ejemplo",
+                            Telefono = "1234567890"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Apellidos = "Apellido Ejemplo",
+                            CorreoElectronico = "persona@example.com",
+                            Documento = "123456789",
+                            FechaNacimiento = new DateOnly(2022, 10, 10),
+                            IdTipoDocumentoFK = 1,
+                            Nombres = "Nombre Ejemplo",
+                            Telefono = "1234567890"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Apellidos = "Apellido Ejemplo",
+                            CorreoElectronico = "persona@example.com",
+                            Documento = "123456789",
+                            FechaNacimiento = new DateOnly(2022, 10, 10),
+                            IdTipoDocumentoFK = 1,
+                            Nombres = "Nombre Ejemplo",
+                            Telefono = "1234567890"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Apellidos = "Apellido Ejemplo",
+                            CorreoElectronico = "persona@example.com",
+                            Documento = "123456789",
+                            FechaNacimiento = new DateOnly(2022, 10, 10),
+                            IdTipoDocumentoFK = 1,
+                            Nombres = "Nombre Ejemplo",
+                            Telefono = "1234567890"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Profesor", b =>
@@ -611,14 +723,58 @@ namespace Persistence.Data.Migrations
                         .HasColumnType("varchar")
                         .HasColumnName("email");
 
+                    b.Property<int>("IdPersonaFK")
+                        .HasColumnType("int");
+
                     b.Property<int>("IdRolFK")
                         .HasColumnType("int");
+
+                    b.Property<string>("NombreUsuario")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdRolFK");
 
                     b.ToTable("usuario", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ClaveUsuario = "AQAAAAIAAYagAAAAEJLB6/aRrT6xkqJYUfQxwUt2wY/37H0PPJ4XDNylyx9yk2mGK4ixSJDOn0Mc+KeB6g==",
+                            CorreoUsuario = "administrador@gmail.com",
+                            IdPersonaFK = 1,
+                            IdRolFK = 1,
+                            NombreUsuario = "JulianA"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ClaveUsuario = "AQAAAAIAAYagAAAAEFSN6Is9/ceIML/0ANwVUWfAvLvM3DvnVik1IjmCZ03xL+ZWXCBPmZ0gHM8ERFflhQ==",
+                            CorreoUsuario = "profesor@gmail.com",
+                            IdPersonaFK = 2,
+                            IdRolFK = 2,
+                            NombreUsuario = "JulianP"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ClaveUsuario = "AQAAAAIAAYagAAAAEEL2KHqP09HxnEgi6X7HSyIiBk6TfkY2249D5R/9s/IbMItQdenOd5pS/c6FUVZzzQ==",
+                            CorreoUsuario = "estudiante@gmail.com",
+                            IdPersonaFK = 3,
+                            IdRolFK = 3,
+                            NombreUsuario = "JulianE"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ClaveUsuario = "AQAAAAIAAYagAAAAEOB7D6zemNVt7Es0SiywOv6qCr+Xfl89OmBKONBTSdug1ZpV4nKm+TZPbbJvByxM2w==",
+                            CorreoUsuario = "padre@gmail.com",
+                            IdPersonaFK = 4,
+                            IdRolFK = 4,
+                            NombreUsuario = "JulianPa"
+                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Archivo", b =>
@@ -694,6 +850,12 @@ namespace Persistence.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Direccion", b =>
                 {
+                    b.HasOne("Domain.Entities.Persona", "Persona")
+                        .WithOne("Direccion")
+                        .HasForeignKey("Domain.Entities.Direccion", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.Ciudad", "Ciudad")
                         .WithMany("Direcciones")
                         .HasForeignKey("IdCiudadFK")
@@ -701,6 +863,8 @@ namespace Persistence.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Ciudad");
+
+                    b.Navigation("Persona");
                 });
 
             modelBuilder.Entity("Domain.Entities.Estudiante", b =>
@@ -837,12 +1001,6 @@ namespace Persistence.Data.Migrations
 
             modelBuilder.Entity("Domain.Entities.Persona", b =>
                 {
-                    b.HasOne("Domain.Entities.Direccion", "Direccion")
-                        .WithOne("Persona")
-                        .HasForeignKey("Domain.Entities.Persona", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.Entities.Usuario", "Usuario")
                         .WithOne("Persona")
                         .HasForeignKey("Domain.Entities.Persona", "Id")
@@ -854,8 +1012,6 @@ namespace Persistence.Data.Migrations
                         .HasForeignKey("IdTipoDocumentoFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Direccion");
 
                     b.Navigation("TipoDocumento");
 
@@ -915,11 +1071,6 @@ namespace Persistence.Data.Migrations
                     b.Navigation("Ciudades");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Direccion", b =>
-                {
-                    b.Navigation("Persona");
-                });
-
             modelBuilder.Entity("Domain.Entities.Estudiante", b =>
                 {
                     b.Navigation("Boletines");
@@ -960,6 +1111,8 @@ namespace Persistence.Data.Migrations
             modelBuilder.Entity("Domain.Entities.Persona", b =>
                 {
                     b.Navigation("Archivos");
+
+                    b.Navigation("Direccion");
 
                     b.Navigation("Estudiante");
 

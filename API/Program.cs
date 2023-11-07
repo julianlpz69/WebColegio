@@ -19,7 +19,7 @@ builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
 builder.Services.ConfigureRatelimiting();
 builder.Services.AddJwt(builder.Configuration);
 
-
+ 
  
 
 builder.Services.AddDbContext<ColegioDBContext>(options =>{

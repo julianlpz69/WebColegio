@@ -10,6 +10,7 @@ namespace API.Services
     {
          Task<string> RegisterAsync(RegistrarDto model);
         Task<DatosUsuarioDto> GetTokenAsync(LogiarDto model);
+        Task<DatosUsuarioDto> GetTokenGoogleAsync(LogiarGoogleDto model);
         Task<DatosUsuarioDto> RefreshTokenAsync(string refreshToken);
     }
 }

@@ -14,8 +14,13 @@ namespace Persistence.Data.Configuration
                 .WithMany(p => p.Departamentos)
                 .HasForeignKey(p => p.IdPaisFK);
 
-            
+            builder.HasData(
+                new Departamento{Id = 1, NombreDepartamento = "Santander", IdPaisFK = 1},
+                new Departamento{Id = 2, NombreDepartamento = "Cundinamarca", IdPaisFK = 1},
+                new Departamento{Id = 3, NombreDepartamento = "Carabobo", IdPaisFK = 2},
+                new Departamento{Id = 4, NombreDepartamento = "Bolivar", IdPaisFK = 2}
+            );
     
-        }
+        } 
     }
 }

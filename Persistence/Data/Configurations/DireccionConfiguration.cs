@@ -15,9 +15,7 @@ namespace Persistence.Data.Configuration
                 .WithMany(p => p.Direcciones)
                 .HasForeignKey(p => p.IdCiudadFK);
 
-            builder.HasOne(p => p.Persona)
-                .WithOne(p => p.Direccion)
-                 .HasForeignKey<Persona>(d => d.Id);
+           
 
             
  
